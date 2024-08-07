@@ -1,0 +1,123 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Book {
+public:
+    int bookID;
+    string title;
+    string author;
+    string publisher;
+    bool isIssued;
+
+    Book(int id, string t, string a, string p) 
+        : bookID(id), title(t), author(a), publisher(p), isIssued(false) {}
+
+    void displayBook() {
+        cout << "Book ID: " << bookID << endl;
+        cout << "Title: " << title << endl;
+        cout << "Author: " << author << endl;
+        cout << "Publisher: " << publisher << endl;
+        cout << "Issued: " << (isIssued ? "Yes" : "No") << endl;
+    }
+
+    void issueBook() {
+        if (!isIssued) {
+            isIssued = true;
+            cout << "Book issued successfully!" << endl;
+        } else {
+            cout << "Book is already issued!" << endl;
+        }
+    }
+
+    void returnBook() {
+        if (isIssued) {
+            isIssued = false;
+            cout << "Book returned successfully!" << endl;
+        } else {
+            cout << "Book was not issued!" << endl;
+        }
+    }
+};
+
+class Library {
+private:
+    vector<Book> books;
+public:
+    void addBook(int id, string title, string author, string publisher) {
+        books.push_back(Book(id, title, author, publisher));
+        cout << "Book added successfully!" << endl;
+    }
+
+    void removeBook(int id) {
+        for (auto it = books.begin(); it != books.end(); ++it) {
+            if (it->bookID == id) {
+                books.erase(it);
+                cout << "Book removed successfully!" << endl;
+                return;
+            }
+        }
+        cout << "Book not found!" << endl;
+    }
+
+    Book* searchBook(string title) {
+        for (auto& book : books) {
+            if (book.title == title) {
+                return &book;
+            }
+        }
+        cout << "Book not found!" << endl;
+        return nullptr;
+    }
+
+    void displayAllBooks() {
+        for (auto& book : books) {
+            book.displayBook();
+            cout << "-----------------------" << endl;
+        }
+    }
+
+    void issueBook(int id) {
+        for (auto& book : books) {
+            if (book.bookID == id) {
+                book.issueBook();
+                return;
+            }
+        }
+        cout << "Book not found!" << endl;
+    }
+
+    void returnBook(int id) {
+        for (auto& book : books) {
+            if (book.bookID == id) {
+                book.returnBook();
+                return;
+            }
+        }
+        cout << "Book not found!" << endl;
+    }
+};
+
+int main() {
+    Library library;
+
+    library.addBook(1, "The Catcher in the Rye", "J.D. Salinger", "Little, Brown and Company");
+    library.addBook(2, "To Kill a Mockingbird", "Harper Lee", "J.B. Lippincott & Co.");
+
+    library.displayAllBooks();
+
+    library.issueBook(1);
+    library.returnBook(1);
+
+    Book* book = library.searchBook("To Kill a Mockingbird");
+    if (book != nullptr) {
+        book->displayBook();
+    }
+
+    library.removeBook(2);
+    library.displayAllBooks();
+
+    return 0;
+}
